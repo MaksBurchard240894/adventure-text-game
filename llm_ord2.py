@@ -14,6 +14,9 @@ import os
 import time
 import platform
 
+from pathlib import Path
+import json
+
 # --- CONFIGURATION ---
 
 # Insert your Groq API key here
@@ -62,6 +65,11 @@ Options: <option1> | <option2>
 - Keep it connected to previous events.
 - No explanations or extra text.
 
+Endings:
+There are three endings the player can reach. After at least three acts, slowly guide the player towards one of the endings, based on the following rules:
+- If the player is noble, guide them towards the option "coronation" for the king ending.
+- If the player is aggresive, guide them towards the option "steal" for the thief ending.
+
 Story so far:
 {history.strip()}
 """
@@ -81,6 +89,20 @@ Story so far:
 
     return response.choices[0].message.content.strip()
 
+DATA_FILE = Path(__file__).parent / "game_data.json"
+
+def log_ending(ending_name):
+    if DATA_FILE.exists():
+        with open(DATA_FILE, "r") as f:
+            data = json.load(f)
+    else:
+        data = {}
+
+    data[ending_name] = data.get(ending_name, 0) + 1
+
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f)
+
 
 # --- MAIN GAME LOOP ---
 
@@ -98,6 +120,17 @@ def main():
 
         if choice.lower() in ["quit", "exit"]:
             print("\n👋 Thanks for playing!")
+            log_ending("quit game")
+            break
+
+        if choice.lower() == "coronation":
+            print("\n You became king and have achieved the King ending!")
+            log_ending("became king")
+            break
+
+        if choice.lower() == "steal":
+            print("\n You became a thief and have achieved the Thief ending!")
+            log_ending("thief")
             break
 
         history += f"\nChoice: {choice}\n"

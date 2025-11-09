@@ -67,8 +67,10 @@ Options: <option1> | <option2>
 
 Endings:
 There are three endings the player can reach. After at least three acts, slowly guide the player towards one of the endings, based on the following rules:
-- If the player is noble, guide them towards the option "coronation" for the king ending.
+- If the player is noble, guide them towards the option "govern" for the king ending.
 - If the player is aggresive, guide them towards the option "steal" for the thief ending.
+- If the player is greedy, guide them towards the option "trade" for the merchant ending.
+- If the player is productive, guide them towards the option "create" for the craftsman ending.
 
 Story so far:
 {history.strip()}
@@ -123,7 +125,7 @@ def main():
             log_ending("quit game")
             break
 
-        if choice.lower() == "coronation":
+        if choice.lower() == "govern":
             print("\n You became king and have achieved the King ending!")
             log_ending("became king")
             break
@@ -131,6 +133,16 @@ def main():
         if choice.lower() == "steal":
             print("\n You became a thief and have achieved the Thief ending!")
             log_ending("thief")
+            break
+
+        if choice.lower() == "trade":
+            print("\n You became a merchant and have achieved the Merchant ending!")
+            log_ending("merchant")
+            break
+        
+        if choice.lower() == "create":
+            print("\n You became a craftsman and have achieved the Craftsman ending!")
+            log_ending("craftsman")
             break
 
         history += f"\nChoice: {choice}\n"
